@@ -22,7 +22,7 @@ namespace LAB1 {
 
 		//-------------------------
 
-		[[nodiscard]] size_t getCost() const noexcept;
+		void printHeader() const noexcept;
 
 		//-------------------------
 
@@ -30,13 +30,15 @@ namespace LAB1 {
 
 		//-------------------------
 
-		[[nodiscard]] size_t isLoad() const noexcept;
+	private: // functions
 
 		//-------------------------
 
-	private: // functions
-
 		[[nodiscard]] size_t findSet(size_t value);
+
+		//-------------------------
+
+		[[nodiscard]] std::set<Edge> loadEdgeToSet();
 
 		//-------------------------
 
@@ -45,10 +47,6 @@ namespace LAB1 {
 		//-------------------------
 
 		void unionSets(size_t lhs, size_t rhs);
-
-		//-------------------------
-
-		[[nodiscard]] std::set<Edge> loadEdgeToSet();
 
 		//-------------------------
 
@@ -81,7 +79,8 @@ namespace LAB1
 	{
 		out << "Vertexes2: [ " << edge.vertex[0] << ", " << edge.vertex[1] << " ]\n";
 		out << "weight: " << edge.weight << "\n";
-		out << "-------------\n";
+
+		std::cout << std::setw(20) << std::setfill('-') << "\n" << std::setfill(' ');
 		return out;
 	}
 
@@ -108,33 +107,24 @@ namespace LAB1
 	//---------------------------------------------------
 
 	template <size_t COUNT_VERTEX>
-	[[nodiscard]]
-	size_t
-		Vertexes<COUNT_VERTEX>::getCost() const noexcept
-	{
-		return _cost;
-	}
-
-	//---------------------------------------------------
-
-	template <size_t COUNT_VERTEX>
 	void Vertexes<COUNT_VERTEX>::printSpanningTree() const noexcept
 	{
-		std::cout << "print spanning tree:\n";
+		if (_is_load == false)
+		{
+			std::cerr << "Error: can not load data from file!\n";
+			return;
+		}
+
+		std::cout << "cost: " << _cost << "\n";
+
+		std::cout << std::setw(30) << std::setfill('=') << "\n" << std::setfill(' ');
+
+		std::cout << "print spanning tree:\n\n";
+
 		for (auto&& elem : _spanning_tree)
 		{
 			std::cout << elem;
 		}
-	}
-
-	//---------------------------------------------------
-
-	template <size_t COUNT_VERTEX>
-	[[nodiscard]]
-	size_t
-		Vertexes<COUNT_VERTEX>::isLoad() const noexcept
-	{
-		return _is_load;
 	}
 
 	//---------------------------------------------------
@@ -158,7 +148,7 @@ namespace LAB1
 	{
 		for (auto&& elem : _data_set)
 		{
-			if (findSet(elem.vertex[0]) != findSet(elem.vertex[1]))
+			if (findSet(elem.vertex[0]) != findSet(elem.vertex[1]) && elem.weight != 0)
 			{
 				_cost += elem.weight;
 				_spanning_tree.emplace_back(elem);
@@ -190,7 +180,7 @@ namespace LAB1
 	template <size_t COUNT_VERTEX>
 	[[nodiscard]]
 	std::set<Edge>
-		Vertexes<COUNT_VERTEX>::loadEdgeToSet()
+	Vertexes<COUNT_VERTEX>::loadEdgeToSet()
 	{
 		std::ifstream data_from_file{ _filename.data() };
 		if (data_from_file.is_open() == false)
@@ -224,6 +214,17 @@ namespace LAB1
 		_is_load = true;
 
 		return data_set;
+	}
+
+	//---------------------------------------------------
+
+	template <size_t COUNT_VERTEX>
+	void Vertexes<COUNT_VERTEX>::printHeader() const noexcept
+	{
+		std::cout << std::setw(30) << std::setfill('=') << "\n" << std::setfill(' ');
+		std::cout << std::setw(10) << "Student:" << std::setw(20) << "Khakimov A.S.\n";
+		std::cout << std::setw(10) << "Variant:" << std::setw(20) << "# 1\n";
+		std::cout << std::setw(30) << std::setfill('=') << "\n" << std::setfill(' ');
 	}
 
 	//---------------------------------------------------

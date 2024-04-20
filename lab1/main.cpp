@@ -10,15 +10,10 @@ int main()
 
 	LAB1::Vertexes<c_count_vertex> vertexes{ filename };
 
-	if (vertexes.isLoad() == false)
-	{
-		std::cerr << "Error: can not load data from file!\n";
-		return 1;
-	}
-
-	std::cout << "cost: " << vertexes.getCost() << "\n";
-
+	vertexes.printHeader();
 	vertexes.printSpanningTree();
+
+	[[maybe_unused]] int c{ getchar() };
 
 	return 0;
 }
